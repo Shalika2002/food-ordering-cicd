@@ -1,0 +1,117 @@
+class UserValidationService {
+  constructor() {
+    this.validationRules = {
+      username: {
+        required: true,
+        minLength: 3,
+        maxLength: 30,
+        message: 'Username is required and must be at least 3 characters'
+      },
+      email: {
+        required: true,
+        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: 'Please provide a valid email address'
+      },
+      password: {
+        required: true,
+        minLength: 6,
+        message: 'Password must be at least 6 characters long'
+      },
+      fullName: {
+        required: true,
+        message: 'Full name is required'
+      },
+      phone: {
+        required: true,
+        minDigits: 10,
+        message: 'Phone number must be at least 10 digits'
+      },
+      address: {
+        required: true,
+        message: 'Address is required'
+      }
+    };
+  }
+
+  validateUserRegistration(userData) {
+    const errors = [];
+
+    // Validate each field using the rules
+    Object.keys(this.validationRules).forEach(field => {
+      const rule = this.validationRules[field];
+      const value = userData[field];
+      
+      if (!this.validateField(value, rule)) {
+        errors.push(rule.message);
+      }
+    });
+
+    return {
+      isValid: errors.length === 0,
+      errors: errors
+    };
+  }
+
+  validateField(value, rule) {
+    // Check if field is required
+    if (rule.required && (!value || value.toString().trim().length === 0)) {
+      return false;
+    }
+
+    // Skip further validation if value is empty and not required
+    if (!value) {
+      return true;
+    }
+
+    // Check minimum length
+    if (rule.minLength && value.toString().trim().length < rule.minLength) {
+      return false;
+    }
+
+    // Check maximum length
+    if (rule.maxLength && value.toString().trim().length > rule.maxLength) {
+      return false;
+    }
+
+    // Check pattern (for email)
+    if (rule.pattern && !rule.pattern.test(value)) {
+      return false;
+    }
+
+    // Check minimum digits (for phone)
+    if (rule.minDigits) {
+      const digits = value.toString().replace(/\D/g, '');
+      if (digits.length < rule.minDigits) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  sanitizeUserInput(userData) {
+    const sanitized = {};
+    const fieldsToTrim = ['username', 'email', 'fullName', 'address'];
+
+    // Process each field
+    Object.keys(userData).forEach(key => {
+      let value = userData[key];
+      
+      // Trim whitespace for specified fields
+      if (fieldsToTrim.includes(key) && typeof value === 'string') {
+        value = value.trim();
+      }
+      
+      // Convert email to lowercase
+      if (key === 'email' && typeof value === 'string') {
+        value = value.toLowerCase();
+      }
+      
+      sanitized[key] = value;
+    });
+
+    return sanitized;
+  }
+}
+
+module.exports = UserValidationService;

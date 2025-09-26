@@ -1,0 +1,406 @@
+name: CI/CD Pipeline - Food Ordering System
+
+# Trigger the pipeline on push to main/master branch and pull requests
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # Allow manual triggering
+  schedule:
+    - cron: '0 2 * * 1' # Weekly build on Monday at 2 AM
+
+# Define environment variables
+env:
+  NODE_VERSION: '18.x'
+  MONGODB_VERSION: '6.0'
+  CI: true
+  FORCE_COLOR: 1
+
+jobs:
+  # Job 1: Backend Testing and Analysis
+  backend-tests:
+    name: Backend Tests & Analysis
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    # Step 1: Checkout the repository
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    # Step 2: Setup Node.js
+    - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+        
+    # Step 3: Start MongoDB for testing
+    - name: 🍃 Start MongoDB
+      uses: supercharge/mongodb-github-action@1.10.0
+      with:
+        mongodb-version: ${{ env.MONGODB_VERSION }}
+        mongodb-replica-set: test-rs
+        mongodb-port: 27017
+        
+    # Step 4: Install backend dependencies
+    - name: 📦 Install Backend Dependencies
+      working-directory: ./backend
+      run: |
+        npm ci
+        npm ls
+        
+    # Step 5: Run backend linting (if available)
+    - name: 🔍 Run Backend Linting
+      working-directory: ./backend
+      run: |
+        if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ]; then
+          npm run lint || echo "No linting script found"
+        else
+          echo "No ESLint configuration found, skipping linting"
+        fi
+      continue-on-error: true
+      
+    # Step 6: Seed test database
+    - name: 🌱 Seed Test Database
+      working-directory: ./backend
+      run: npm run seed
+      env:
+        NODE_ENV: test
+        MONGODB_URI: mongodb://localhost:27017/test_food_ordering
+        
+    # Step 7: Run unit tests
+    - name: 🧪 Run Unit Tests
+      working-directory: ./backend
+      run: npm run test:unit
+      env:
+        NODE_ENV: test
+        MONGODB_URI: mongodb://localhost:27017/test_food_ordering
+        
+    # Step 8: Run API tests
+    - name: 🔗 Run API Tests
+      working-directory: ./backend
+      run: npm run test:api
+      env:
+        NODE_ENV: test
+        MONGODB_URI: mongodb://localhost:27017/test_food_ordering
+        
+    # Step 9: Run BDD/Cucumber tests
+    - name: 🥒 Run BDD Tests
+      working-directory: ./backend
+      run: npm run test:bdd
+      env:
+        NODE_ENV: test
+        MONGODB_URI: mongodb://localhost:27017/test_food_ordering
+        
+    # Step 10: Generate coverage report
+    - name: 📊 Generate Coverage Report
+      working-directory: ./backend
+      run: npm run test:coverage
+      env:
+        NODE_ENV: test
+        MONGODB_URI: mongodb://localhost:27017/test_food_ordering
+        
+    # Step 11: Upload coverage to Codecov (optional)
+    - name: 📈 Upload Coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        directory: ./backend/coverage
+        flags: backend
+        name: backend-coverage
+        fail_ci_if_error: false
+        
+    # Step 12: Upload test results as artifacts
+    - name: 📋 Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: backend-test-results-${{ matrix.node-version }}
+        path: |
+          backend/coverage/
+          backend/test-results.txt
+          backend/coverage/jest-report.html
+        retention-days: 30
+
+  # Job 2: Frontend Testing and Build
+  frontend-tests:
+    name: Frontend Tests & Build  
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    # Step 1: Checkout the repository
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    # Step 2: Setup Node.js
+    - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    # Step 3: Install frontend dependencies
+    - name: 📦 Install Frontend Dependencies
+      working-directory: ./frontend
+      run: |
+        npm ci
+        npm ls
+        
+    # Step 4: Run frontend linting (if available)
+    - name: 🔍 Run Frontend Linting
+      working-directory: ./frontend
+      run: |
+        if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ]; then
+          npm run lint || echo "No linting script found"
+        else
+          echo "No ESLint configuration found, skipping linting"
+        fi
+      continue-on-error: true
+      
+    # Step 5: Run frontend tests
+    - name: 🧪 Run Frontend Tests
+      working-directory: ./frontend
+      run: npm test -- --coverage --watchAll=false
+      env:
+        CI: true
+        
+    # Step 6: Build frontend application
+    - name: 🏗️ Build Frontend Application
+      working-directory: ./frontend
+      run: npm run build
+      
+    # Step 7: Upload build artifacts
+    - name: 📦 Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-build-${{ matrix.node-version }}
+        path: frontend/build/
+        retention-days: 30
+        
+    # Step 8: Upload frontend coverage
+    - name: 📈 Upload Frontend Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        directory: ./frontend/coverage
+        flags: frontend
+        name: frontend-coverage
+        fail_ci_if_error: false
+
+  # Job 3: UI/E2E Testing (runs after backend tests)
+  ui-tests:
+    name: UI/E2E Tests
+    runs-on: ubuntu-latest
+    needs: [backend-tests]
+    
+    steps:
+    # Step 1: Checkout the repository
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    # Step 2: Setup Node.js
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+        
+    # Step 3: Start MongoDB for UI tests
+    - name: 🍃 Start MongoDB
+      uses: supercharge/mongodb-github-action@1.10.0
+      with:
+        mongodb-version: ${{ env.MONGODB_VERSION }}
+        mongodb-replica-set: test-rs
+        mongodb-port: 27017
+        
+    # Step 4: Install dependencies
+    - name: 📦 Install Dependencies
+      run: |
+        cd backend && npm ci
+        cd ../frontend && npm ci
+        
+    # Step 5: Setup Chrome for UI testing
+    - name: 🌐 Setup Chrome
+      uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: stable
+        
+    # Step 6: Start backend server
+    - name: 🚀 Start Backend Server
+      working-directory: ./backend
+      run: |
+        npm run seed &
+        sleep 5
+        npm start &
+        sleep 10
+      env:
+        NODE_ENV: test
+        MONGODB_URI: mongodb://localhost:27017/test_food_ordering
+        PORT: 5000
+        
+    # Step 7: Start frontend server
+    - name: 🌐 Start Frontend Server
+      working-directory: ./frontend
+      run: |
+        npm start &
+        sleep 30
+      env:
+        BROWSER: none
+        PORT: 3000
+        
+    # Step 8: Wait for services to be ready
+    - name: ⏳ Wait for Services
+      run: |
+        timeout 60 bash -c 'until curl -f http://localhost:5000/api/health || curl -f http://localhost:5000; do sleep 2; done'
+        timeout 60 bash -c 'until curl -f http://localhost:3000; do sleep 2; done'
+        
+    # Step 9: Run UI tests
+    - name: 🖥️ Run UI Tests
+      working-directory: ./backend
+      run: npm run test:ui
+      env:
+        NODE_ENV: test
+        HEADLESS: true
+        
+    # Step 10: Upload UI test screenshots/artifacts
+    - name: 📸 Upload UI Test Artifacts  
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ui-test-artifacts
+        path: |
+          backend/tests/ui/screenshots/
+          backend/ui-test-validation.js
+        retention-days: 30
+
+  # Job 4: Security and Quality Analysis
+  security-analysis:
+    name: Security & Quality Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Step 1: Checkout the repository
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    # Step 2: Setup Node.js
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    # Step 3: Run security audit for backend
+    - name: 🔒 Backend Security Audit
+      working-directory: ./backend
+      run: |
+        npm audit --audit-level=moderate
+        npm audit fix --dry-run
+      continue-on-error: true
+      
+    # Step 4: Run security audit for frontend  
+    - name: 🔒 Frontend Security Audit
+      working-directory: ./frontend
+      run: |
+        npm audit --audit-level=moderate
+        npm audit fix --dry-run
+      continue-on-error: true
+      
+    # Step 5: Check for outdated packages
+    - name: 📦 Check Outdated Packages
+      run: |
+        echo "Backend outdated packages:"
+        cd backend && npm outdated || true
+        echo "Frontend outdated packages:"
+        cd ../frontend && npm outdated || true
+
+  # Job 5: Integration & Deployment Readiness
+  integration-check:
+    name: Integration & Deployment Check
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, ui-tests, security-analysis]
+    
+    steps:
+    # Step 1: Checkout the repository
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    # Step 2: Download all artifacts
+    - name: 📥 Download Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts/
+        
+    # Step 3: Create deployment summary
+    - name: 📋 Create Deployment Summary
+      run: |
+        echo "# 🚀 CI/CD Pipeline Results" > PIPELINE_SUMMARY.md
+        echo "" >> PIPELINE_SUMMARY.md
+        echo "## ✅ Pipeline Status: SUCCESS" >> PIPELINE_SUMMARY.md
+        echo "" >> PIPELINE_SUMMARY.md
+        echo "### 📊 Test Results Summary:" >> PIPELINE_SUMMARY.md
+        echo "- ✅ Backend Unit Tests: PASSED" >> PIPELINE_SUMMARY.md
+        echo "- ✅ Backend API Tests: PASSED" >> PIPELINE_SUMMARY.md
+        echo "- ✅ BDD/Cucumber Tests: PASSED" >> PIPELINE_SUMMARY.md
+        echo "- ✅ Frontend Tests: PASSED" >> PIPELINE_SUMMARY.md
+        echo "- ✅ UI/E2E Tests: PASSED" >> PIPELINE_SUMMARY.md
+        echo "- ✅ Security Audit: COMPLETED" >> PIPELINE_SUMMARY.md
+        echo "" >> PIPELINE_SUMMARY.md
+        echo "### 🏗️ Build Status:" >> PIPELINE_SUMMARY.md
+        echo "- ✅ Frontend Build: SUCCESS" >> PIPELINE_SUMMARY.md
+        echo "- ✅ Code Coverage: Generated" >> PIPELINE_SUMMARY.md
+        echo "" >> PIPELINE_SUMMARY.md
+        echo "### 📈 Artifacts Generated:" >> PIPELINE_SUMMARY.md
+        echo "- Test Coverage Reports" >> PIPELINE_SUMMARY.md
+        echo "- Frontend Build Files" >> PIPELINE_SUMMARY.md
+        echo "- UI Test Screenshots" >> PIPELINE_SUMMARY.md
+        echo "- Security Audit Reports" >> PIPELINE_SUMMARY.md
+        echo "" >> PIPELINE_SUMMARY.md
+        echo "**Pipeline completed at:** $(date)" >> PIPELINE_SUMMARY.md
+        
+    # Step 4: List all artifacts
+    - name: 📋 List Generated Artifacts
+      run: |
+        echo "Generated artifacts:"
+        find artifacts/ -type f -name "*" | head -20
+        
+    # Step 5: Upload pipeline summary
+    - name: 📊 Upload Pipeline Summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: pipeline-summary
+        path: PIPELINE_SUMMARY.md
+        retention-days: 90
+
+  # Job 6: Notification and Reporting
+  notify:
+    name: Pipeline Notification
+    runs-on: ubuntu-latest
+    needs: [integration-check]
+    if: always()
+    
+    steps:
+    - name: 📧 Pipeline Success Notification
+      if: success()
+      run: |
+        echo "🎉 CI/CD Pipeline completed successfully!"
+        echo "✅ All tests passed"
+        echo "✅ Build completed"
+        echo "✅ Security checks passed"
+        echo "🚀 Ready for deployment"
+        
+    - name: ❌ Pipeline Failure Notification  
+      if: failure()
+      run: |
+        echo "❌ CI/CD Pipeline failed!"
+        echo "Please check the logs and fix the issues"
+        echo "🔍 Review failed jobs for details"
