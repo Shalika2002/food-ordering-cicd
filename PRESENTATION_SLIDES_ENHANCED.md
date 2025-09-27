@@ -3,7 +3,7 @@
 
 ---
 
-## 🎯 Presentation Overview
+## Presentation Overview
 
 **Topics Covered:**
 - CI/CD Pipeline Architecture
@@ -15,7 +15,7 @@
 
 ---
 
-## 📊 Pipeline Architecture
+## Pipeline Architecture
 
 ### **Multi-Stage CI/CD Pipeline**
 
@@ -41,7 +41,7 @@ graph TB
 
 ---
 
-## 🔧 Key Pipeline Components
+## Key Pipeline Components
 
 ### **1. GitHub Actions Pipeline**
 ```yaml
@@ -75,7 +75,7 @@ graph TB
 
 ---
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
 ### **Comprehensive Test Coverage**
 
@@ -95,43 +95,43 @@ graph TB
 
 ---
 
-## 🚀 Pipeline Execution Flow
+## Pipeline Execution Flow
 
 ### **Stage 1: Preparation & Health Check**
 ```bash
-✅ Environment validation
-✅ Dependencies check
-✅ Test configuration validation
-✅ Required files verification
+- Environment validation
+- Dependencies check
+- Test configuration validation
+- Required files verification
 ```
 
 ### **Stage 2: Parallel Build & Test**
 ```bash
 # Backend Testing
-🧪 Unit Tests → API Tests → BDD Tests
-📊 Coverage Report Generation
-🔒 Security Audit
+Unit Tests → API Tests → BDD Tests
+Coverage Report Generation
+Security Audit
 
 # Frontend Testing
-🖥️ React Component Tests
-🏗️ Production Build
-📦 Build Artifact Generation
+React Component Tests
+Production Build
+Build Artifact Generation
 ```
 
 ### **Stage 3: UI/E2E Testing**
 ```bash
-🚀 Backend Server Startup
-🌐 Frontend Server Startup
-🤖 Selenium WebDriver Tests
-📸 Screenshot Capture
+Backend Server Startup
+Frontend Server Startup
+Selenium WebDriver Tests
+Screenshot Capture
 ```
 
 ### **Stage 4: Integration & Deployment**
 ```bash
-📋 Test Results Aggregation
-📦 Artifact Collection
-✅ Deployment Readiness Check
-📧 Success/Failure Notifications
+Test Results Aggregation
+Artifact Collection
+Deployment Readiness Check
+Success/Failure Notifications
 ```
 
 ---
