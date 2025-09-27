@@ -1,0 +1,148 @@
+name: Debug CI/CD Issues
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  debug-environment:
+    name: Debug Environment Setup
+    runs-on: ubuntu-latest
+    
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+    - name: Checkout Repository  
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+        
+    - name: Debug - Check Project Structure
+      run: |
+        echo "=== PROJECT STRUCTURE ==="
+        ls -la
+        echo ""
+        echo "=== BACKEND STRUCTURE ==="
+        ls -la backend/
+        echo ""
+        echo "=== TEST STRUCTURE ==="
+        ls -la backend/tests/
+        echo ""
+        echo "=== BACKEND PACKAGE.JSON ==="
+        cat backend/package.json
+        
+    - name: Install Backend Dependencies
+      working-directory: ./backend
+      run: |
+        echo "=== INSTALLING DEPENDENCIES ==="
+        npm ci
+        echo ""
+        echo "=== DEPENDENCY LIST ==="
+        npm ls --depth=0
+        
+    - name: Debug - Test MongoDB Connection
+      run: |
+        echo "=== MONGODB CONNECTION TEST ==="
+        mongosh --eval "db.adminCommand('ping')" || echo "MongoDB connection failed"
+        mongosh --eval "show dbs" || echo "Cannot list databases"
+        
+    - name: Debug - Check Test Files
+      working-directory: ./backend
+      run: |
+        echo "=== UNIT TEST FILES ==="
+        find tests/unit -name "*.test.js" -exec echo {} \; -exec head -5 {} \; || echo "No unit test files found"
+        echo ""
+        echo "=== API TEST FILES ==="
+        find tests/api -name "*.test.js" -exec echo {} \; -exec head -5 {} \; || echo "No API test files found"
+        echo ""
+        echo "=== BDD FEATURE FILES ==="
+        find features -name "*.feature" -exec echo {} \; -exec head -3 {} \; || echo "No BDD files found"
+        
+    - name: Debug - Test Scripts Validation
+      working-directory: ./backend
+      run: |
+        echo "=== TESTING TEST SCRIPTS ==="
+        echo "Testing unit tests..."
+        npm run test:unit --verbose || echo "Unit tests failed"
+        echo ""
+        echo "Testing API tests..."
+        npm run test:api --verbose || echo "API tests failed"
+        echo ""
+        echo "Testing BDD tests..."
+        npm run test:bdd --verbose || echo "BDD tests failed"
+      env:
+        NODE_ENV: test
+        MONGODB_URI: mongodb://localhost:27017/test_food_ordering
+        
+    - name: Debug - Generate Coverage (if possible)
+      working-directory: ./backend
+      run: |
+        echo "=== COVERAGE TEST ==="
+        npm run test:coverage || echo "Coverage generation failed"
+      env:
+        NODE_ENV: test
+        MONGODB_URI: mongodb://localhost:27017/test_food_ordering
+      continue-on-error: true
+
+  debug-frontend:
+    name: Debug Frontend Issues
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    - name: Debug - Frontend Structure
+      run: |
+        echo "=== FRONTEND STRUCTURE ==="
+        ls -la frontend/
+        echo ""
+        echo "=== FRONTEND PACKAGE.JSON ==="
+        cat frontend/package.json
+        
+    - name: Install Frontend Dependencies
+      working-directory: ./frontend
+      run: |
+        echo "=== INSTALLING FRONTEND DEPENDENCIES ==="
+        npm ci
+        echo ""
+        echo "=== FRONTEND DEPENDENCY LIST ==="
+        npm ls --depth=0
+        
+    - name: Debug - Frontend Tests
+      working-directory: ./frontend
+      run: |
+        echo "=== FRONTEND TEST EXECUTION ==="
+        npm test -- --coverage --watchAll=false --verbose || echo "Frontend tests failed"
+      env:
+        CI: true
+      continue-on-error: true
+        
+    - name: Debug - Frontend Build
+      working-directory: ./frontend
+      run: |
+        echo "=== FRONTEND BUILD ==="
+        npm run build || echo "Frontend build failed"
+      continue-on-error: true
