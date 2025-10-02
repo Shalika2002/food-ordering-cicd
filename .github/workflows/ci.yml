@@ -11,6 +11,8 @@ env:
   NODE_VERSION: '18.x'
   MONGODB_VERSION: '6.0'
   CI: true
+  JWT_SECRET: test-jwt-secret-for-ci-cd-pipeline-minimum-32-chars
+  MONGODB_URI: mongodb://localhost:27017/test_food_ordering
 
 jobs:
   backend-tests:
@@ -53,42 +55,38 @@ jobs:
       working-directory: ./backend
       run: |
         echo "Seeding test database..."
-        npm run seed || echo "Database seeding failed, continuing..."
+        npm run seed
         echo "Database seed completed"
       env:
         NODE_ENV: test
         MONGODB_URI: mongodb://localhost:27017/test_food_ordering
-      continue-on-error: true
         
     - name: Run Unit Tests
       working-directory: ./backend
       run: |
         echo "Running unit tests..."
-        npm run test:unit || echo "Unit tests failed, check logs"
+        npm run test:unit
       env:
         NODE_ENV: test
         MONGODB_URI: mongodb://localhost:27017/test_food_ordering
-      continue-on-error: true
         
     - name: Run API Tests
       working-directory: ./backend
       run: |
         echo "Running API tests..."
-        npm run test:api || echo "API tests failed, check logs"
+        npm run test:api
       env:
         NODE_ENV: test
         MONGODB_URI: mongodb://localhost:27017/test_food_ordering
-      continue-on-error: true
         
     - name: Run BDD Tests
       working-directory: ./backend
       run: |
         echo "Running BDD tests..."
-        npm run test:bdd || echo "BDD tests failed, check logs"
+        npm run test:bdd
       env:
         NODE_ENV: test
         MONGODB_URI: mongodb://localhost:27017/test_food_ordering
-      continue-on-error: true
         
     - name: Generate Coverage Report
       working-directory: ./backend

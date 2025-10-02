@@ -1,0 +1,69 @@
+env:
+  contexts:
+    - name: "Food Ordering Frontend"
+      urls:
+        - "http://localhost:3000"
+      includePaths:
+        - "http://localhost:3000.*"
+      excludePaths:
+        - "http://localhost:3000/static/.*"
+        - "http://localhost:3000/.*\\.js"
+        - "http://localhost:3000/.*\\.css"
+        - "http://localhost:3000/.*\\.png"
+        - "http://localhost:3000/.*\\.jpg"
+        - "http://localhost:3000/.*\\.ico"
+      authentication:
+        method: "form"
+        loginUrl: "http://localhost:3000/login"
+        loginRequestData: "username=admin&password=SecurePass123!"
+        usernameParameter: "username"
+        passwordParameter: "password"
+      users:
+        - name: "admin"
+          credentials:
+            username: "admin"
+            password: "SecurePass123!"
+      sessionManagement:
+        method: "cookie"
+        
+  rules:
+    - id: 10021
+      name: "X-Content-Type-Options Header Missing"
+      threshold: "medium"
+    - id: 10020
+      name: "X-Frame-Options Header Not Set"
+      threshold: "medium"
+    - id: 10016
+      name: "Web Application Potentially Vulnerable to Clickjacking"
+      threshold: "medium"
+    - id: 10035
+      name: "Strict-Transport-Security Header Not Set"
+      threshold: "low"
+    - id: 10038
+      name: "Content Security Policy (CSP) Header Not Set"
+      threshold: "medium"
+
+  jobs:
+    - type: "passiveScan-config"
+      parameters:
+        maxAlertsPerRule: 10
+        
+    - type: "spider"
+      parameters:
+        context: "Food Ordering Frontend"
+        url: "http://localhost:3000"
+        maxDuration: 10
+        maxDepth: 5
+        
+    - type: "activeScan"
+      parameters:
+        context: "Food Ordering Frontend"
+        url: "http://localhost:3000"
+        maxDuration: 15
+        maxRuleDurationInMins: 1
+        
+    - type: "report"
+      parameters:
+        template: "traditional-html"
+        reportDir: "./zap-reports"
+        reportFile: "zap-frontend-report"

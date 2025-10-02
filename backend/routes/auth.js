@@ -35,11 +35,15 @@ router.post('/register', async (req, res) => {
 
     await user.save();
 
-    // Generate JWT token
+    // Generate JWT token with secure secret and shorter expiration
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret || jwtSecret === 'your-secret-key') {
+      throw new Error('JWT_SECRET environment variable must be set with a secure value');
+    }
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '7d' }
+      jwtSecret,
+      { expiresIn: '2h' } // Reduced from 7 days to 2 hours for security
     );
 
     res.status(201).json({
@@ -97,11 +101,15 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
 
-    // Generate JWT token
+    // Generate JWT token with secure secret and shorter expiration
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret || jwtSecret === 'your-secret-key') {
+      throw new Error('JWT_SECRET environment variable must be set with a secure value');
+    }
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '7d' }
+      jwtSecret,
+      { expiresIn: '2h' } // Reduced from 7 days to 2 hours for security
     );
 
     res.json({

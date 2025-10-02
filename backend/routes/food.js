@@ -10,8 +10,13 @@ router.get('/', async (req, res) => {
     const { category, available } = req.query;
     let filter = {};
     
-    if (category) filter.category = category;
-    if (available !== undefined) filter.available = available === 'true';
+    // Input validation to prevent NoSQL injection
+    if (category && typeof category === 'string') {
+      filter.category = category.trim();
+    }
+    if (available !== undefined && (available === 'true' || available === 'false')) {
+      filter.available = available === 'true';
+    }
 
     const foods = await Food.find(filter).sort({ createdAt: -1 });
     res.json(foods);
@@ -30,7 +35,9 @@ router.get('/search', async (req, res) => {
       return res.status(400).json({ message: 'Search query is required' });
     }
     
-    const searchRegex = new RegExp(q, 'i'); // Case-insensitive search
+    // Sanitize input to prevent regex injection
+    const sanitizedQuery = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const searchRegex = new RegExp(sanitizedQuery, 'i'); // Case-insensitive search
     const foods = await Food.find({
       $or: [
         { name: { $regex: searchRegex } },

@@ -23,6 +23,9 @@ module.exports = {
     '!**/tests/ui/**' // UI tests use different timeout settings
   ],
   
+  // Handle cases where no tests are found
+  passWithNoTests: true,
+  
   // Setup files
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
   

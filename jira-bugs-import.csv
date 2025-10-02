@@ -1,0 +1,117 @@
+Summary,Issue Type,Priority,Labels,Description,Security Impact,CVE ID,OWASP Category,Assignee
+"Complete Server Configuration Exposure via /api/admin/config",Bug,Highest,"security, configuration, critical","## 🚨 CRITICAL Security Vulnerability
+
+The `/api/admin/config` endpoint in `app-vulnerable.js` exposes complete system configuration including database credentials, JWT secrets, and API keys without any authentication checks.
+
+### 🎯 Vulnerability Details
+- **Endpoint**: `GET /api/admin/config`
+- **Authentication Required**: ❌ None (VULNERABILITY)
+- **CVSS Score**: 9.8 (Critical)
+
+### 🔍 Information Exposed
+- Database credentials: `mongodb://admin:password123@localhost:27017`
+- JWT secret: `super-secret-key-12345`
+- API keys: Stripe, AWS, SendGrid
+
+### 🧪 Steps to Reproduce
+1. Start vulnerable server: `npm run vulnerable`
+2. Access endpoint: `curl http://localhost:5000/api/admin/config`
+3. Observe complete configuration exposure
+
+### ✅ Expected Results
+Should require authentication and not expose sensitive data
+
+### ❌ Actual Results
+Returns complete system configuration including sensitive credentials
+
+### 💥 Security Impact
+- Complete system compromise possible
+- Compliance violations (GDPR, SOX, PCI-DSS)
+
+### 🛠️ Fix Location
+File: `backend/app-secure.js` shows proper implementation",Critical,CVE-2024-0001,A01:2021 - Broken Access Control,Shalika Hathursinghe
+"Missing Security Headers Enable Clickjacking Attacks",Bug,High,"security-headers, clickjacking, xss","## ⚠️ MAJOR Security Vulnerability
+
+The server lacks critical security headers making it vulnerable to clickjacking, XSS, and MIME type attacks.
+
+### 🎯 Missing Security Headers
+- ❌ X-Frame-Options: DENY (Allows clickjacking)
+- ❌ Content-Security-Policy (Enables XSS attacks)
+- ❌ X-Content-Type-Options: nosniff (MIME type attacks)
+- ❌ Strict-Transport-Security (No HSTS protection)
+
+### 🧪 Steps to Reproduce
+1. Start vulnerable server: `npm run vulnerable`
+2. Open browser developer tools → Network tab
+3. Navigate to: `http://localhost:5000`
+4. Check response headers - observe missing security headers
+5. Test clickjacking: Page can be embedded in iframe
+
+### ✅ Expected Results
+All security headers should be present
+
+### ❌ Actual Results
+Response headers missing critical security protections
+
+### 💥 Security Impact
+- Clickjacking attacks on admin panel
+- XSS vulnerabilities via missing CSP
+- MIME type attacks
+
+### 🛠️ Recommended Fix
+Add security headers middleware with helmet.js",High,CVE-2024-0002,A05:2021 - Security Misconfiguration,Shalika Hathursinghe
+"User Password Exposed in Authentication Response",Bug,High,"authentication, data-exposure, privacy","## ⚠️ MAJOR Privacy & Security Violation
+
+The login endpoint returns user passwords in plain text within the authentication response, violating security best practices and privacy regulations.
+
+### 🎯 Vulnerability Details
+- **Endpoint**: `POST /api/auth/login`
+- **Issue**: Password included in response payload
+- **Privacy Impact**: GDPR violation
+
+### 🧪 Steps to Reproduce
+1. Start vulnerable server: `npm run vulnerable`
+2. Send login request: `curl -X POST http://localhost:5000/api/auth/login -H ""Content-Type: application/json"" -d '{""username"":""admin"",""password"":""admin123""}'`
+3. Examine response - observe password exposure
+
+### ✅ Expected Results
+Authentication response should exclude password
+
+### ❌ Actual Results
+Response includes password, previous passwords, and security questions
+
+### 💥 Security Impact
+- Password harvesting from responses
+- Credential exposure in application logs
+- Privacy violations (GDPR compliance issues)
+
+### 🛠️ Recommended Fix
+Remove sensitive data from user object before sending response",High,CVE-2024-0003,A02:2021 - Cryptographic Failures,Shalika Hathursinghe
+"Stack Traces and System Information Exposed in Error Messages",Bug,Medium,"information-disclosure, debugging","## 📋 Information Disclosure Issue
+
+Error handling middleware exposes detailed system information including stack traces, file paths, and environment details in error responses.
+
+### 🎯 Information Exposed
+- Complete stack traces with file paths
+- Node.js version information  
+- Platform and architecture details
+- Request headers and body data
+
+### 🧪 Steps to Reproduce
+1. Start vulnerable server: `npm run vulnerable`
+2. Trigger an error: `curl http://localhost:5000/api/invalid-endpoint`
+3. Examine error response for information disclosure
+
+### ✅ Expected Results
+Generic error message without system details
+
+### ❌ Actual Results
+Detailed error information including stack traces and system info
+
+### 💥 Security Impact
+- System fingerprinting from version info
+- Path disclosure from stack traces
+- Technology stack information exposure
+
+### 🛠️ Recommended Fix
+Implement secure error handling without information disclosure",Medium,CVE-2024-0004,A05:2021 - Security Misconfiguration,Shalika Hathursinghe

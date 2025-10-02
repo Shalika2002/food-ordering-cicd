@@ -9,7 +9,11 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ message: 'No token provided, access denied' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret || jwtSecret === 'your-secret-key') {
+      throw new Error('JWT_SECRET environment variable must be set with a secure value');
+    }
+    const decoded = jwt.verify(token, jwtSecret);
     const user = await User.findById(decoded.userId).select('-password');
     
     if (!user) {
