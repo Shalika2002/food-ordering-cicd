@@ -31,24 +31,44 @@ router.get('/search', async (req, res) => {
   try {
     const { q } = req.query;
     
-    if (!q) {
+    // Input validation
+    if (!q || typeof q !== 'string') {
       return res.status(400).json({ message: 'Search query is required' });
     }
     
-    // Sanitize input to prevent regex injection
+    // Length validation to prevent ReDoS attacks
+    if (q.length < 2 || q.length > 100) {
+      return res.status(400).json({ 
+        message: 'Search query must be between 2 and 100 characters' 
+      });
+    }
+    
+    // Sanitize input - escape ALL special regex characters to prevent injection
     const sanitizedQuery = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const searchRegex = new RegExp(sanitizedQuery, 'i'); // Case-insensitive search
+    
+    // Use MongoDB's $regex operator with string instead of RegExp object
+    // This is safer as it prevents ReDoS attacks
     const foods = await Food.find({
       $or: [
-        { name: { $regex: searchRegex } },
-        { description: { $regex: searchRegex } },
-        { category: { $regex: searchRegex } }
+        { name: { $regex: sanitizedQuery, $options: 'i' } },
+        { description: { $regex: sanitizedQuery, $options: 'i' } },
+        { category: { $regex: sanitizedQuery, $options: 'i' } }
       ]
-    });
+    })
+    .limit(50) // Limit results to prevent excessive data transfer
+    .maxTimeMS(5000); // Timeout after 5 seconds to prevent DoS
     
     res.json(foods);
   } catch (error) {
     console.error('Search food error:', error);
+    
+    // Handle timeout errors
+    if (error.name === 'MongooseError' && error.message.includes('timeout')) {
+      return res.status(408).json({ 
+        message: 'Search timeout - please refine your query' 
+      });
+    }
+    
     res.status(500).json({ message: 'Server error' });
   }
 });

@@ -1,0 +1,121 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1759457282363,118,Health Check,200,OK,Load Test - 10 Users 1-1,text,true,,369,127,1,1,http://localhost:5000/api/health,104,0,78
+1759457282990,3,Get Food Items,200,OK,Load Test - 10 Users 1-1,text,true,,790,125,2,2,http://localhost:5000/api/food,3,0,0
+1759457283162,3,Health Check,200,OK,Load Test - 10 Users 1-2,text,true,,369,127,2,2,http://localhost:5000/api/health,3,0,1
+1759457283495,41,Login,400,Bad Request,Load Test - 10 Users 1-1,text,false,,371,183,2,2,http://localhost:5000/api/auth/login,40,0,0
+1759457283666,3,Get Food Items,200,OK,Load Test - 10 Users 1-2,text,true,,790,125,3,3,http://localhost:5000/api/food,2,0,0
+1759457284039,4,Create Order,400,Bad Request,Load Test - 10 Users 1-1,text,false,Order creation failed,349,179,3,3,http://localhost:5000/api/orders,4,0,0
+1759457284160,3,Health Check,200,OK,Load Test - 10 Users 1-3,text,true,,369,127,3,3,http://localhost:5000/api/health,3,0,1
+1759457284169,3,Login,400,Bad Request,Load Test - 10 Users 1-2,text,false,,371,183,3,3,http://localhost:5000/api/auth/login,3,0,0
+1759457284563,2,Health Check,200,OK,Load Test - 10 Users 1-1,text,true,,369,127,3,3,http://localhost:5000/api/health,2,0,0
+1759457284664,2,Get Food Items,200,OK,Load Test - 10 Users 1-3,text,true,,790,125,4,4,http://localhost:5000/api/food,2,0,0
+1759457284672,3,Create Order,400,Bad Request,Load Test - 10 Users 1-2,text,false,Order creation failed,349,179,4,4,http://localhost:5000/api/orders,3,0,0
+1759457285066,2,Get Food Items,200,OK,Load Test - 10 Users 1-1,text,true,,790,125,4,4,http://localhost:5000/api/food,2,0,0
+1759457285157,3,Health Check,200,OK,Load Test - 10 Users 1-4,text,true,,369,127,4,4,http://localhost:5000/api/health,3,0,1
+1759457285172,4,Login,400,Bad Request,Load Test - 10 Users 1-3,text,false,,371,183,4,4,http://localhost:5000/api/auth/login,4,0,0
+1759457285187,4,Health Check,200,OK,Load Test - 10 Users 1-2,text,true,,369,127,4,4,http://localhost:5000/api/health,4,0,2
+1759457285572,3,Login,400,Bad Request,Load Test - 10 Users 1-1,text,false,,371,183,4,4,http://localhost:5000/api/auth/login,3,0,0
+1759457285663,2,Get Food Items,200,OK,Load Test - 10 Users 1-4,text,true,,790,125,5,5,http://localhost:5000/api/food,2,0,0
+1759457285679,2,Create Order,400,Bad Request,Load Test - 10 Users 1-3,text,false,Order creation failed,349,179,5,5,http://localhost:5000/api/orders,2,0,0
+1759457285693,2,Get Food Items,200,OK,Load Test - 10 Users 1-2,text,true,,790,125,5,5,http://localhost:5000/api/food,2,0,0
+1759457286088,3,Create Order,400,Bad Request,Load Test - 10 Users 1-1,text,false,Order creation failed,349,179,5,5,http://localhost:5000/api/orders,3,0,0
+1759457286150,3,Health Check,200,OK,Load Test - 10 Users 1-5,text,true,,369,127,5,5,http://localhost:5000/api/health,3,0,1
+1759457286167,2,Login,400,Bad Request,Load Test - 10 Users 1-4,text,false,,371,183,5,5,http://localhost:5000/api/auth/login,2,0,0
+1759457286184,4,Health Check,200,OK,Load Test - 10 Users 1-3,text,true,,369,127,5,5,http://localhost:5000/api/health,4,0,2
+1759457286196,2,Login,400,Bad Request,Load Test - 10 Users 1-2,text,false,,371,183,5,5,http://localhost:5000/api/auth/login,2,0,0
+1759457286592,3,Health Check,200,OK,Load Test - 10 Users 1-1,text,true,,369,127,5,5,http://localhost:5000/api/health,2,0,1
+1759457286654,3,Get Food Items,200,OK,Load Test - 10 Users 1-5,text,true,,790,125,6,6,http://localhost:5000/api/food,3,0,0
+1759457286670,3,Create Order,400,Bad Request,Load Test - 10 Users 1-4,text,false,Order creation failed,349,179,6,6,http://localhost:5000/api/orders,3,0,0
+1759457286690,2,Get Food Items,200,OK,Load Test - 10 Users 1-3,text,true,,790,125,6,6,http://localhost:5000/api/food,2,0,0
+1759457286699,2,Create Order,400,Bad Request,Load Test - 10 Users 1-2,text,false,Order creation failed,349,179,6,6,http://localhost:5000/api/orders,1,0,0
+1759457287095,2,Get Food Items,200,OK,Load Test - 10 Users 1-1,text,true,,790,125,6,6,http://localhost:5000/api/food,2,0,0
+1759457287143,3,Health Check,200,OK,Load Test - 10 Users 1-6,text,true,,369,127,6,6,http://localhost:5000/api/health,2,0,1
+1759457287158,1,Login,400,Bad Request,Load Test - 10 Users 1-5,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,1,0,0
+1759457287189,3,Health Check,200,OK,Load Test - 10 Users 1-4,text,true,,369,127,6,6,http://localhost:5000/api/health,3,0,2
+1759457287205,3,Login,400,Bad Request,Load Test - 10 Users 1-3,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,3,0,0
+1759457287206,4,Health Check,200,OK,Load Test - 10 Users 1-2,text,true,,369,127,6,6,http://localhost:5000/api/health,4,0,1
+1759457287608,3,Login,400,Bad Request,Load Test - 10 Users 1-1,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457287655,3,Get Food Items,200,OK,Load Test - 10 Users 1-6,text,true,,790,125,7,7,http://localhost:5000/api/food,3,0,0
+1759457287672,2,Create Order,400,Bad Request,Load Test - 10 Users 1-5,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,2,0,0
+1759457287702,1,Get Food Items,200,OK,Load Test - 10 Users 1-4,text,true,,790,125,7,7,http://localhost:5000/api/food,1,0,0
+1759457287717,2,Create Order,400,Bad Request,Load Test - 10 Users 1-3,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,2,0,0
+1759457287717,2,Get Food Items,200,OK,Load Test - 10 Users 1-2,text,true,,790,125,7,7,http://localhost:5000/api/food,2,0,0
+1759457288118,3,Create Order,400,Bad Request,Load Test - 10 Users 1-1,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,3,0,0
+1759457288151,2,Health Check,200,OK,Load Test - 10 Users 1-7,text,true,,369,127,6,6,http://localhost:5000/api/health,2,0,0
+1759457288165,2,Login,400,Bad Request,Load Test - 10 Users 1-6,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457288180,3,Health Check,200,OK,Load Test - 10 Users 1-5,text,true,,369,127,6,6,http://localhost:5000/api/health,3,0,2
+1759457288205,2,Login,400,Bad Request,Load Test - 10 Users 1-4,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457288220,3,Login,400,Bad Request,Load Test - 10 Users 1-2,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,3,0,0
+1759457288220,4,Health Check,200,OK,Load Test - 10 Users 1-3,text,true,,369,127,6,6,http://localhost:5000/api/health,4,0,1
+1759457288653,3,Get Food Items,200,OK,Load Test - 10 Users 1-7,text,true,,790,125,7,7,http://localhost:5000/api/food,3,0,0
+1759457288667,2,Create Order,400,Bad Request,Load Test - 10 Users 1-6,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,2,0,0
+1759457288684,2,Get Food Items,200,OK,Load Test - 10 Users 1-5,text,true,,790,125,7,7,http://localhost:5000/api/food,2,0,0
+1759457288707,2,Create Order,400,Bad Request,Load Test - 10 Users 1-4,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,2,0,0
+1759457288724,2,Create Order,400,Bad Request,Load Test - 10 Users 1-2,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,2,0,0
+1759457288725,2,Get Food Items,200,OK,Load Test - 10 Users 1-3,text,true,,790,125,6,6,http://localhost:5000/api/food,2,0,0
+1759457289149,2,Health Check,200,OK,Load Test - 10 Users 1-8,text,true,,369,127,6,6,http://localhost:5000/api/health,2,0,1
+1759457289164,2,Login,400,Bad Request,Load Test - 10 Users 1-7,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457289180,3,Health Check,200,OK,Load Test - 10 Users 1-6,text,true,,369,127,6,6,http://localhost:5000/api/health,3,0,2
+1759457289195,2,Login,400,Bad Request,Load Test - 10 Users 1-5,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457289210,2,Health Check,200,OK,Load Test - 10 Users 1-4,text,true,,369,127,6,6,http://localhost:5000/api/health,2,0,1
+1759457289227,2,Login,400,Bad Request,Load Test - 10 Users 1-3,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457289651,3,Get Food Items,200,OK,Load Test - 10 Users 1-8,text,true,,790,125,7,7,http://localhost:5000/api/food,3,0,0
+1759457289667,2,Create Order,400,Bad Request,Load Test - 10 Users 1-7,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,2,0,0
+1759457289684,2,Get Food Items,200,OK,Load Test - 10 Users 1-6,text,true,,790,125,7,7,http://localhost:5000/api/food,1,0,0
+1759457289698,2,Create Order,400,Bad Request,Load Test - 10 Users 1-5,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,2,0,0
+1759457289713,1,Get Food Items,200,OK,Load Test - 10 Users 1-4,text,true,,790,125,7,7,http://localhost:5000/api/food,1,0,0
+1759457289730,2,Create Order,400,Bad Request,Load Test - 10 Users 1-3,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,2,0,0
+1759457290153,3,Health Check,200,OK,Load Test - 10 Users 1-9,text,true,,369,127,6,6,http://localhost:5000/api/health,3,0,1
+1759457290167,3,Login,400,Bad Request,Load Test - 10 Users 1-8,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,3,0,0
+1759457290183,3,Health Check,200,OK,Load Test - 10 Users 1-7,text,true,,369,127,6,6,http://localhost:5000/api/health,3,0,2
+1759457290198,2,Login,400,Bad Request,Load Test - 10 Users 1-6,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457290200,3,Health Check,200,OK,Load Test - 10 Users 1-5,text,true,,369,127,6,6,http://localhost:5000/api/health,2,0,1
+1759457290215,2,Login,400,Bad Request,Load Test - 10 Users 1-4,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457290658,1,Get Food Items,200,OK,Load Test - 10 Users 1-9,text,true,,790,125,7,7,http://localhost:5000/api/food,1,0,0
+1759457290671,3,Create Order,400,Bad Request,Load Test - 10 Users 1-8,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,3,0,0
+1759457290687,2,Get Food Items,200,OK,Load Test - 10 Users 1-7,text,true,,790,125,7,7,http://localhost:5000/api/food,2,0,0
+1759457290701,2,Create Order,400,Bad Request,Load Test - 10 Users 1-6,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,2,0,0
+1759457290703,1,Get Food Items,200,OK,Load Test - 10 Users 1-5,text,true,,790,125,7,7,http://localhost:5000/api/food,1,0,0
+1759457290718,2,Create Order,400,Bad Request,Load Test - 10 Users 1-4,text,false,Order creation failed,349,179,7,7,http://localhost:5000/api/orders,2,0,0
+1759457291153,3,Health Check,200,OK,Load Test - 10 Users 1-10,text,true,,369,127,6,6,http://localhost:5000/api/health,3,0,1
+1759457291168,2,Login,400,Bad Request,Load Test - 10 Users 1-9,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457291183,2,Health Check,200,OK,Load Test - 10 Users 1-8,text,true,,369,127,6,6,http://localhost:5000/api/health,2,0,1
+1759457291198,2,Login,400,Bad Request,Load Test - 10 Users 1-7,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457291213,2,Login,400,Bad Request,Load Test - 10 Users 1-5,text,false,,371,183,6,6,http://localhost:5000/api/auth/login,2,0,0
+1759457291214,2,Health Check,200,OK,Load Test - 10 Users 1-6,text,true,,369,127,6,6,http://localhost:5000/api/health,2,0,1
+1759457291659,2,Get Food Items,200,OK,Load Test - 10 Users 1-10,text,true,,790,125,6,6,http://localhost:5000/api/food,2,0,0
+1759457291674,3,Create Order,400,Bad Request,Load Test - 10 Users 1-9,text,false,Order creation failed,349,179,6,6,http://localhost:5000/api/orders,3,0,0
+1759457291690,2,Get Food Items,200,OK,Load Test - 10 Users 1-8,text,true,,790,125,6,6,http://localhost:5000/api/food,2,0,0
+1759457291706,2,Create Order,400,Bad Request,Load Test - 10 Users 1-7,text,false,Order creation failed,349,179,6,6,http://localhost:5000/api/orders,2,0,0
+1759457291722,3,Get Food Items,200,OK,Load Test - 10 Users 1-6,text,true,,790,125,6,6,http://localhost:5000/api/food,3,0,0
+1759457291722,4,Create Order,400,Bad Request,Load Test - 10 Users 1-5,text,false,Order creation failed,349,179,6,6,http://localhost:5000/api/orders,4,0,0
+1759457292166,2,Login,400,Bad Request,Load Test - 10 Users 1-10,text,false,,371,183,5,5,http://localhost:5000/api/auth/login,2,0,0
+1759457292183,2,Health Check,200,OK,Load Test - 10 Users 1-9,text,true,,369,127,5,5,http://localhost:5000/api/health,2,0,1
+1759457292198,2,Login,400,Bad Request,Load Test - 10 Users 1-8,text,false,,371,183,5,5,http://localhost:5000/api/auth/login,2,0,0
+1759457292214,2,Health Check,200,OK,Load Test - 10 Users 1-7,text,true,,369,127,5,5,http://localhost:5000/api/health,2,0,1
+1759457292229,2,Login,400,Bad Request,Load Test - 10 Users 1-6,text,false,,371,183,5,5,http://localhost:5000/api/auth/login,2,0,0
+1759457292675,2,Create Order,400,Bad Request,Load Test - 10 Users 1-10,text,false,Order creation failed,349,179,5,5,http://localhost:5000/api/orders,1,0,0
+1759457292690,2,Get Food Items,200,OK,Load Test - 10 Users 1-9,text,true,,790,125,5,5,http://localhost:5000/api/food,2,0,0
+1759457292706,2,Create Order,400,Bad Request,Load Test - 10 Users 1-8,text,false,Order creation failed,349,179,5,5,http://localhost:5000/api/orders,2,0,0
+1759457292722,2,Get Food Items,200,OK,Load Test - 10 Users 1-7,text,true,,790,125,5,5,http://localhost:5000/api/food,2,0,0
+1759457292737,3,Create Order,400,Bad Request,Load Test - 10 Users 1-6,text,false,Order creation failed,349,179,5,5,http://localhost:5000/api/orders,2,0,0
+1759457293183,2,Health Check,200,OK,Load Test - 10 Users 1-10,text,true,,369,127,4,4,http://localhost:5000/api/health,2,0,1
+1759457293197,2,Login,400,Bad Request,Load Test - 10 Users 1-9,text,false,,371,183,4,4,http://localhost:5000/api/auth/login,2,0,0
+1759457293214,2,Health Check,200,OK,Load Test - 10 Users 1-8,text,true,,369,127,4,4,http://localhost:5000/api/health,2,0,1
+1759457293228,2,Login,400,Bad Request,Load Test - 10 Users 1-7,text,false,,371,183,4,4,http://localhost:5000/api/auth/login,2,0,0
+1759457293691,1,Get Food Items,200,OK,Load Test - 10 Users 1-10,text,true,,790,125,4,4,http://localhost:5000/api/food,1,0,0
+1759457293706,2,Create Order,400,Bad Request,Load Test - 10 Users 1-9,text,false,Order creation failed,349,179,4,4,http://localhost:5000/api/orders,2,0,0
+1759457293721,3,Get Food Items,200,OK,Load Test - 10 Users 1-8,text,true,,790,125,4,4,http://localhost:5000/api/food,3,0,0
+1759457293737,3,Create Order,400,Bad Request,Load Test - 10 Users 1-7,text,false,Order creation failed,349,179,4,4,http://localhost:5000/api/orders,2,0,0
+1759457294199,2,Login,400,Bad Request,Load Test - 10 Users 1-10,text,false,,371,183,3,3,http://localhost:5000/api/auth/login,2,0,0
+1759457294214,3,Health Check,200,OK,Load Test - 10 Users 1-9,text,true,,369,127,3,3,http://localhost:5000/api/health,3,0,1
+1759457294229,2,Login,400,Bad Request,Load Test - 10 Users 1-8,text,false,,371,183,3,3,http://localhost:5000/api/auth/login,2,0,0
+1759457294711,1,Create Order,400,Bad Request,Load Test - 10 Users 1-10,text,false,Order creation failed,349,179,3,3,http://localhost:5000/api/orders,1,0,0
+1759457294726,4,Get Food Items,200,OK,Load Test - 10 Users 1-9,text,true,,790,125,3,3,http://localhost:5000/api/food,3,0,0
+1759457294741,6,Create Order,400,Bad Request,Load Test - 10 Users 1-8,text,false,Order creation failed,349,179,3,3,http://localhost:5000/api/orders,6,0,0
+1759457295218,2,Health Check,200,OK,Load Test - 10 Users 1-10,text,true,,369,127,2,2,http://localhost:5000/api/health,2,0,1
+1759457295232,2,Login,400,Bad Request,Load Test - 10 Users 1-9,text,false,,371,183,2,2,http://localhost:5000/api/auth/login,2,0,0
+1759457295726,3,Get Food Items,200,OK,Load Test - 10 Users 1-10,text,true,,790,125,2,2,http://localhost:5000/api/food,3,0,0
+1759457295741,3,Create Order,400,Bad Request,Load Test - 10 Users 1-9,text,false,Order creation failed,349,179,2,2,http://localhost:5000/api/orders,3,0,0
+1759457296236,3,Login,400,Bad Request,Load Test - 10 Users 1-10,text,false,,371,183,1,1,http://localhost:5000/api/auth/login,3,0,0
+1759457296746,2,Create Order,400,Bad Request,Load Test - 10 Users 1-10,text,false,Order creation failed,349,179,1,1,http://localhost:5000/api/orders,2,0,0

@@ -23,8 +23,7 @@ const renderWithProviders = (component) => {
   return render(
     <BrowserRouter>
       <AuthProvider>
-        {component}
-      </AuthProvider>
+        {component}</AuthProvider>
     </BrowserRouter>
   );
 };
